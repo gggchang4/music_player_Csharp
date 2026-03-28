@@ -24,11 +24,24 @@ MusicPlayerApp is a Windows music player focused on local audio playback and lib
 
 ## Screenshots
 
-Add screenshots under `docs/images/` and reference them from the language-specific README files.
+### Main Window
+
+![Main Window](docs/images/main-window.png)
+
+### Playlist View
+
+![Playlist View](docs/images/playlist-view.png)
+
+### Settings View
+
+![Settings View](docs/images/set-view.png)
+
+### User Profile View
+
+![User Profile View](docs/images/userprofile-view.png)
 
 ## Open Source Checklist
 
-- Add real application screenshots
 - Review `.gitignore` before publishing
 - Confirm no personal data or local paths should be exposed
 - Create the first release tag if needed

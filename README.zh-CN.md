@@ -96,21 +96,21 @@ cd MusicPlayer
 
 ## 项目截图
 
-当前我先把截图结构预留好了，你可以后续把实际截图放到 `docs/images/` 目录，并在这里替换成真实图片。
+### 主界面
 
-推荐截图文件名：
-
-- `docs/images/main-window.png`
-- `docs/images/library-view.png`
-- `docs/images/playlist-view.png`
-- `docs/images/equalizer-window.png`
-
-示例写法：
-
-```md
 ![主界面](docs/images/main-window.png)
-![音乐库](docs/images/library-view.png)
-```
+
+### 播放列表视图
+
+![播放列表视图](docs/images/playlist-view.png)
+
+### 设置视图
+
+![设置视图](docs/images/set-view.png)
+
+### 用户资料视图
+
+![用户资料视图](docs/images/userprofile-view.png)
 
 ## 当前说明
 
@@ -128,7 +128,6 @@ cd MusicPlayer
 
 ## 开源前检查清单
 
-- 补充真实项目截图
 - 检查 `.gitignore`，避免把 `bin`、`obj`、本地数据库或 IDE 缓存误传到 GitHub
 - 检查代码和日志中是否包含个人路径、账号信息或测试数据
 - 确认 NuGet 依赖能够正常还原

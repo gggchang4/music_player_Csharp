@@ -1,1 +1,35 @@
+# Visual Studio
 .vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build outputs
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+AnyCPU/
+
+# NuGet
+packages/
+*.nupkg
+project.assets.json
+project.nuget.cache
+
+# Logs and diagnostics
+*.log
+TestResult*/
+TestResults/
+
+# Database and local app data
+*.db
+*.sqlite
+*.sqlite3
+
+# OS / editor files
+Thumbs.db
+Desktop.ini

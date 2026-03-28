@@ -96,21 +96,21 @@ cd MusicPlayer
 
 ## Screenshots
 
-The screenshot structure is prepared for you. You can place real screenshots under `docs/images/` and replace this section with actual images later.
+### Main Window
 
-Recommended filenames:
-
-- `docs/images/main-window.png`
-- `docs/images/library-view.png`
-- `docs/images/playlist-view.png`
-- `docs/images/equalizer-window.png`
-
-Example:
-
-```md
 ![Main Window](docs/images/main-window.png)
-![Library View](docs/images/library-view.png)
-```
+
+### Playlist View
+
+![Playlist View](docs/images/playlist-view.png)
+
+### Settings View
+
+![Settings View](docs/images/set-view.png)
+
+### User Profile View
+
+![User Profile View](docs/images/userprofile-view.png)
 
 ## Current Notes
 
@@ -128,7 +128,6 @@ Example:
 
 ## Pre-release Checklist
 
-- Add real project screenshots
 - Review `.gitignore` to avoid pushing `bin`, `obj`, local databases, or IDE cache files
 - Check the codebase and logs for personal paths, credentials, or temporary test data
 - Confirm NuGet packages can be restored successfully
