@@ -1,0 +1,186 @@
+<UserControl x:Class="MusicPlayerApp.Views.AlbumDetailsUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:local="clr-namespace:MusicPlayerApp.Views"
+             xmlns:converters="clr-namespace:MusicPlayerApp.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 标题栏 -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="20,10,20,0">
+            <Button 
+                Command="{Binding BackCommand}" 
+                Style="{DynamicResource MaterialDesignFlatButton}" 
+                ToolTip="返回" 
+                Margin="0,0,10,0">
+                <materialDesign:PackIcon Kind="ArrowLeft" Width="24" Height="24"/>
+            </Button>
+            <TextBlock Text="专辑详情" FontSize="20" FontWeight="Bold" Margin="0,0,10,0" VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- 专辑信息 -->
+        <Grid Grid.Row="1" Margin="20,20,20,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 专辑封面 -->
+            <Border Grid.Column="0" 
+                    Width="150" Height="150" 
+                    Background="{DynamicResource PrimaryHueLightBrush}" 
+                    CornerRadius="3">
+                <Grid>
+                    <!-- 专辑封面图片 -->
+                    <Image Source="{Binding Album.CoverImage}"
+                           Stretch="UniformToFill"
+                           Visibility="{Binding Album.CoverImage, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    
+                    <!-- 当没有图片时显示默认图标 -->
+                    <materialDesign:PackIcon Kind="Album" 
+                                           Width="80" Height="80" 
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Visibility="{Binding Album.CoverImage, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}"/>
+                </Grid>
+            </Border>
+
+            <!-- 专辑信息 -->
+            <StackPanel Grid.Column="1" Margin="20,0,0,0" VerticalAlignment="Center">
+                <TextBlock Text="{Binding Album.Title}" 
+                         FontSize="24" 
+                         FontWeight="Bold"
+                         TextWrapping="Wrap"/>
+                
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                    <TextBlock Text="艺术家: " Opacity="0.7"/>
+                    <Button Content="{Binding Album.Artist.Name}" 
+                          Style="{DynamicResource MaterialDesignFlatButton}"
+                          Command="{Binding NavigateToArtistCommand}"
+                          CommandParameter="{Binding Album.Artist}"
+                          Padding="0"
+                          VerticalAlignment="Top"
+                          HorizontalAlignment="Left"/>
+                </StackPanel>
+                
+                <TextBlock Text="{Binding Album.Year, StringFormat=发行年份: {0:0000}, FallbackValue=发行年份: 未知, TargetNullValue=发行年份: 未知}" 
+                         Opacity="0.7"
+                         Margin="0,5,0,0"/>
+                
+                <Button Content="播放专辑" 
+                      Style="{DynamicResource MaterialDesignRaisedButton}"
+                      Command="{Binding PlayAlbumCommand}"
+                      Background="{DynamicResource PrimaryHueMidBrush}"
+                      Margin="0,20,0,0"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- 歌曲列表 -->
+        <StackPanel Grid.Row="2" Margin="20,20,20,20">
+            <TextBlock Text="歌曲列表" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
+            
+            <!-- 加载指示器 -->
+            <ProgressBar IsIndeterminate="True"
+                       Margin="0,20,0,0"
+                       HorizontalAlignment="Center"
+                       Width="60" Height="60"
+                       Style="{DynamicResource MaterialDesignCircularProgressBar}"
+                       Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            
+            <ListView ItemsSource="{Binding Songs}" 
+                    BorderThickness="0"
+                    Style="{DynamicResource MaterialDesignListView}"
+                    Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}"
+                    AlternationCount="10000">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                        <Setter Property="Tag" Value="{Binding RelativeSource={RelativeSource Self}, Path=(ItemsControl.AlternationIndex)}"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Margin="0,5,0,5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- 曲目编号 -->
+                            <TextBlock Grid.Column="0" 
+                                     Text="{Binding Path=(ItemsControl.AlternationIndex), 
+                                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListViewItem}}, 
+                                            StringFormat={}{0:D}}" 
+                                     Width="30"
+                                     VerticalAlignment="Center"
+                                     HorizontalAlignment="Center"
+                                     Opacity="0.7"/>
+
+                            <!-- 歌曲信息 -->
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="10,0,0,0">
+                                <TextBlock Text="{Binding Title}" FontWeight="SemiBold"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="时长: " FontSize="12" Opacity="0.7"/>
+                                    <TextBlock Text="{Binding Duration, Converter={StaticResource TimeSpanToStringConverter}}" FontSize="12" Opacity="0.7"/>
+                                </StackPanel>
+                            </StackPanel>
+
+                            <!-- 收藏按钮 -->
+                            <Button Grid.Column="2" 
+                                  Style="{DynamicResource MaterialDesignFlatButton}"
+                                  Command="{Binding DataContext.ToggleFavoriteCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                  CommandParameter="{Binding}">
+                                <materialDesign:PackIcon Kind="Heart" Width="24" Height="24"/>
+                            </Button>
+
+                            <!-- 添加到播放列表按钮 -->
+                            <Button Grid.Column="3" 
+                                  Style="{DynamicResource MaterialDesignFlatButton}"
+                                  Command="{Binding DataContext.AddToPlaylistCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                  CommandParameter="{Binding}">
+                                <materialDesign:PackIcon Kind="PlaylistPlus" Width="24" Height="24"/>
+                            </Button>
+
+                            <!-- 播放按钮 -->
+                            <Button Grid.Column="4" 
+                                  Style="{DynamicResource MaterialDesignFlatButton}"
+                                  Command="{Binding DataContext.PlaySongCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                  CommandParameter="{Binding}">
+                                <materialDesign:PackIcon Kind="Play" Width="24" Height="24"/>
+                            </Button>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            
+            <!-- 无歌曲提示 -->
+            <TextBlock Text="专辑中没有歌曲" 
+                     FontSize="16" 
+                     HorizontalAlignment="Center" 
+                     Margin="0,20,0,0"
+                     Visibility="{Binding Songs.Count, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Zero}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

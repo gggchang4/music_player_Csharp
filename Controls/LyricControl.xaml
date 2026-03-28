@@ -1,0 +1,53 @@
+<UserControl x:Class="MusicPlayerApp.Controls.LyricControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MusicPlayerApp.Controls"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="300">
+    
+    <UserControl.Resources>
+        <Style x:Key="LyricItemStyle" TargetType="TextBlock">
+            <Setter Property="Margin" Value="5,3" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBodyLight}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsCurrent}" Value="True">
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="FontSize" Value="16" />
+                    <Setter Property="Foreground" Value="{DynamicResource PrimaryHueMidForegroundBrush}" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    
+    <Grid>
+        <ScrollViewer x:Name="LyricScrollViewer" 
+                      VerticalScrollBarVisibility="Auto"
+                      HorizontalScrollBarVisibility="Disabled"
+                      CanContentScroll="True"
+                      PanningMode="VerticalOnly"
+                      Visibility="{Binding HasLyrics, Converter={StaticResource BooleanToVisibilityConverter}}">
+            
+            <ItemsControl x:Name="LyricItemsControl" 
+                          ItemsSource="{Binding LyricLines}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Content}"
+                                   Style="{StaticResource LyricItemStyle}" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+        
+        <!-- 简化无歌词显示 -->
+        <StackPanel HorizontalAlignment="Center" 
+                   VerticalAlignment="Center"
+                   Visibility="{Binding HasLyrics, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+        </StackPanel>
+    </Grid>
+</UserControl> 

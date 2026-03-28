@@ -1,0 +1,227 @@
+<UserControl x:Class="MusicPlayerApp.UserControls.FavoritesUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MusicPlayerApp.UserControls"
+             xmlns:converters="clr-namespace:MusicPlayerApp.Converters"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    
+    <UserControl.Resources>
+        <converters:SecondsToTimeStringConverter x:Key="SecondsToTimeStringConverter" />
+        <converters:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 标题和工具栏 -->
+        <Grid Grid.Row="0" Margin="20,15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Column="0" Text="我喜欢的音乐" Style="{DynamicResource TitleTextStyle}" VerticalAlignment="Center"/>
+            
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <Button Style="{DynamicResource MaterialDesignIconButton}" 
+                        ToolTip="刷新" Margin="5,0"
+                        Command="{Binding RefreshCommand}">
+                    <materialDesign:PackIcon Kind="Refresh" Width="22" Height="22"/>
+            </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- 主内容区 -->
+        <Grid Grid.Row="1" Background="{DynamicResource ContentBackground}">
+            <!-- 加载指示器 -->
+            <materialDesign:Card Padding="30" 
+                                 VerticalAlignment="Center" HorizontalAlignment="Center"
+                                 Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel>
+                    <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" 
+                                 Value="0" IsIndeterminate="True" 
+                                 Width="50" Height="50" Margin="0,0,0,15"/>
+                    <TextBlock Text="正在加载我喜欢的音乐..." HorizontalAlignment="Center"/>
+                </StackPanel>
+            </materialDesign:Card>
+
+            <!-- 无收藏歌曲显示 -->
+            <TextBlock Text="暂无收藏音乐" 
+                       VerticalAlignment="Center" 
+                       HorizontalAlignment="Center" 
+                       FontSize="18" 
+                       Foreground="{DynamicResource MaterialDesignBody}"
+                       FontWeight="Bold"
+                       Visibility="{Binding FavoriteSongs.Count, Converter={StaticResource CountToVisibilityConverter}, ConverterParameter=0}" />
+
+        <!-- 歌曲列表 -->
+            <DataGrid x:Name="SongsDataGrid" 
+                          ItemsSource="{Binding FavoriteSongs}" 
+                          SelectedItem="{Binding SelectedSong}"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      IsReadOnly="True"
+                      GridLinesVisibility="None"
+                      Background="Transparent"
+                          BorderThickness="0"
+                      RowHeaderWidth="0"
+                      SelectionMode="Single"
+                      SelectionUnit="FullRow"
+                      Margin="10,0,10,10"
+                      Foreground="{DynamicResource MaterialDesignBody}"
+                      ColumnWidth="SizeToHeader"
+                      HorizontalScrollBarVisibility="Disabled"
+                      HorizontalGridLinesBrush="{DynamicResource BorderBrush}"
+                      VerticalGridLinesBrush="{DynamicResource BorderBrush}"
+                      RowHeight="40">
+                
+                <DataGrid.Resources>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#4C6EF5"/>
+                    <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent"/>
+                </DataGrid.Resources>
+                
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
+                        <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="Height" Value="40"/>
+                            <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#4C6EF5"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource HoverBrush}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                </DataGrid.RowStyle>
+                
+                <DataGrid.CellStyle>
+                    <Style TargetType="DataGridCell" BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                        <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="VerticalAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Padding" Value="8,4"/>
+                    </Style>
+                </DataGrid.CellStyle>
+                
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Width="45">
+                        <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                <Button Style="{StaticResource MaterialDesignIconButton}" 
+                                        Command="{Binding DataContext.PlaySongCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding}"
+                                        Foreground="{DynamicResource MaterialDesignPaper}"
+                                        Width="28" Height="28"
+                                        Padding="0"
+                                        Background="{DynamicResource PrimaryHueMidBrush}"
+                                        BorderBrush="Transparent"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                    <materialDesign:PackIcon Kind="Play" Width="12" Height="12"/>
+                                </Button>
+                                    </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="标题" Binding="{Binding Title}" Width="2*" MinWidth="150">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                <Setter Property="ToolTip" Value="{Binding Title}"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Padding" Value="5"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="艺术家" Binding="{Binding Artist.Name}" Width="*" MinWidth="100">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                <Setter Property="ToolTip" Value="{Binding Artist.Name}"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Padding" Value="5"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="专辑" Binding="{Binding Album.Title}" Width="*" MinWidth="120">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                <Setter Property="ToolTip" Value="{Binding Album.Title}"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Padding" Value="5"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Header="时长" Binding="{Binding Duration, Converter={StaticResource SecondsToTimeStringConverter}}" Width="70">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+                                <Setter Property="HorizontalAlignment" Value="Right"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="Margin" Value="0,0,10,0"/>
+                                <Setter Property="Padding" Value="5"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTemplateColumn Width="45">
+                        <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                <Button Style="{StaticResource MaterialDesignIconButton}" 
+                                        Command="{Binding DataContext.RemoveFavoriteCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                    CommandParameter="{Binding}"
+                                        Foreground="{DynamicResource MaterialDesignPaper}"
+                                        Width="28" Height="28"
+                                        Padding="0"
+                                        Background="{DynamicResource PrimaryHueMidBrush}"
+                                        BorderBrush="Transparent"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                    <materialDesign:PackIcon Kind="HeartOff" Width="12" Height="12"/>
+                                            </Button>
+                                    </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+
+                <!-- 右键菜单 -->
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="播放" 
+                                  Command="{Binding Path=PlacementTarget.DataContext.PlaySongCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" 
+                                  CommandParameter="{Binding Path=PlacementTarget.SelectedItem, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="Play" Width="18" Height="18"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="取消收藏" 
+                                  Command="{Binding Path=PlacementTarget.DataContext.RemoveFavoriteCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}" 
+                                  CommandParameter="{Binding Path=PlacementTarget.SelectedItem, RelativeSource={RelativeSource AncestorType=ContextMenu}}">
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon Kind="HeartOff" Width="18" Height="18"/>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+            </DataGrid>
+            </Grid>
+    </Grid>
+</UserControl> 

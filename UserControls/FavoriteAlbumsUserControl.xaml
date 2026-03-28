@@ -1,0 +1,182 @@
+<UserControl x:Class="MusicPlayerApp.UserControls.FavoriteAlbumsUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MusicPlayerApp.UserControls"
+             xmlns:converters="clr-namespace:MusicPlayerApp.Converters"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    
+    <UserControl.Resources>
+        <converters:CountToVisibilityConverter x:Key="CountToVisibilityConverter" />
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 标题和工具栏 -->
+        <Grid Grid.Row="0" Margin="20,15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="我的收藏" Style="{DynamicResource TitleTextStyle}" VerticalAlignment="Center"/>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <Button Style="{DynamicResource MaterialDesignIconButton}" 
+                        ToolTip="刷新" Margin="5,0"
+                        Command="{Binding RefreshCommand}">
+                    <materialDesign:PackIcon Kind="Refresh" Width="22" Height="22"/>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- 主内容区 -->
+        <Grid Grid.Row="1" Background="{DynamicResource ContentBackground}">
+            <!-- 加载指示器 -->
+            <materialDesign:Card Padding="30" 
+                                 VerticalAlignment="Center" HorizontalAlignment="Center"
+                                 Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel>
+                    <ProgressBar Style="{StaticResource MaterialDesignCircularProgressBar}" 
+                                 Value="0" IsIndeterminate="True" 
+                                 Width="50" Height="50" Margin="0,0,0,15"/>
+                    <TextBlock Text="正在加载收藏内容..." HorizontalAlignment="Center"/>
+                </StackPanel>
+            </materialDesign:Card>
+
+            <!-- 无收藏专辑显示 -->
+            <TextBlock Text="暂无收藏内容" 
+                       VerticalAlignment="Center" 
+                       HorizontalAlignment="Center" 
+                       FontSize="18" 
+                       Foreground="{DynamicResource MaterialDesignBody}"
+                       FontWeight="Bold"
+                       Visibility="{Binding HasNoFavorites, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+            <!-- 专辑列表 -->
+            <ItemsControl ItemsSource="{Binding FavoriteAlbums}" 
+                          Margin="10"
+                          Visibility="{Binding HasFavorites, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <materialDesign:Card Width="160" Height="220" Margin="10" Background="{DynamicResource HoverBrush}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="160"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <!-- 专辑封面 -->
+                                <Grid Grid.Row="0">
+                                    <!-- 图片 -->
+                                    <Image Source="{Binding CoverImage}" 
+                                           Width="160" Height="160" 
+                                           Stretch="UniformToFill">
+                                        <Image.Style>
+                                            <Style TargetType="Image">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding CoverImage}" Value="{x:Null}">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding CoverImage}" Value="">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Image.Style>
+                                    </Image>
+                                    
+                                    <!-- 默认图标 -->
+                                    <materialDesign:PackIcon Kind="Album" 
+                                                             Width="80" Height="80" 
+                                                             HorizontalAlignment="Center" 
+                                                             VerticalAlignment="Center"
+                                                             Foreground="#808080">
+                                        <materialDesign:PackIcon.Style>
+                                            <Style TargetType="materialDesign:PackIcon">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding CoverImage}" Value="{x:Null}">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding CoverImage}" Value="">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </materialDesign:PackIcon.Style>
+                                    </materialDesign:PackIcon>
+                                </Grid>
+
+                                <!-- 专辑信息 -->
+                                <StackPanel Grid.Row="1" Margin="8,4">
+                                    <TextBlock Text="{Binding Title}" 
+                                               TextTrimming="CharacterEllipsis" 
+                                               ToolTip="{Binding Title}"
+                                               FontWeight="SemiBold"
+                                               Foreground="{DynamicResource MaterialDesignBody}"/>
+                                    <TextBlock Text="{Binding Artist.Name}" 
+                                               TextTrimming="CharacterEllipsis" 
+                                               ToolTip="{Binding Artist.Name}"
+                                               Foreground="{DynamicResource MaterialDesignBody}"
+                                               Opacity="0.7"
+                                               FontSize="11"/>
+                                </StackPanel>
+
+                                <!-- 操作按钮覆盖层 -->
+                                <Grid Grid.Row="0" Background="#80000000">
+                                    <Grid.Style>
+                                        <Style TargetType="Grid">
+                                            <Setter Property="Opacity" Value="0"/>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Opacity" Value="1"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Grid.Style>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <Button Style="{StaticResource MaterialDesignIconButton}" 
+                                                Command="{Binding DataContext.PlayAlbumCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                                CommandParameter="{Binding}"
+                                                Background="{DynamicResource PrimaryHueMidBrush}"
+                                                Foreground="{DynamicResource MaterialDesignPaper}"
+                                                Width="40" Height="40"
+                                                Margin="5">
+                                            <materialDesign:PackIcon Kind="Play" Width="20" Height="20"/>
+                                        </Button>
+                                        <Button Style="{StaticResource MaterialDesignIconButton}" 
+                                                Command="{Binding DataContext.RemoveFavoriteCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" 
+                                                CommandParameter="{Binding}"
+                                                Background="{DynamicResource PrimaryHueMidBrush}"
+                                                Foreground="{DynamicResource MaterialDesignPaper}"
+                                                Width="40" Height="40"
+                                                Margin="5">
+                                            <materialDesign:PackIcon Kind="HeartOff" Width="20" Height="20"/>
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                        </materialDesign:Card>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </Grid>
+</UserControl> 

@@ -1,0 +1,83 @@
+<Application x:Class="MusicPlayerApp.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:MusicPlayerApp"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:helpers="clr-namespace:MusicPlayerApp.Helpers"
+             xmlns:converters="clr-namespace:MusicPlayerApp.Converters"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- 最简单的MaterialDesign主题引用方式 -->
+                <materialDesign:BundledTheme BaseTheme="Dark" PrimaryColor="DeepPurple" SecondaryColor="Lime" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+                
+                <!-- 自定义资源字典 -->
+                <ResourceDictionary>
+                    <!-- 通用资源 - 深色主题 -->
+                    <SolidColorBrush x:Key="BackgroundBrush" Color="#1E1E1E"/>
+                    <SolidColorBrush x:Key="ForegroundBrush" Color="#FFFFFF"/>
+                    <SolidColorBrush x:Key="AccentBrush" Color="#7B1FA2"/>
+                    <SolidColorBrush x:Key="SecondaryAccentBrush" Color="#00BCD4"/>
+                    <SolidColorBrush x:Key="SideNavBackground" Color="#1A1A1A"/>
+                    <SolidColorBrush x:Key="TopBarBackground" Color="#252525"/>
+                    <SolidColorBrush x:Key="PlayBarBackground" Color="#2D2D2D"/>
+                    <SolidColorBrush x:Key="ContentBackground" Color="#1E1E1E"/>
+                    <SolidColorBrush x:Key="SubtitleForeground" Color="#FFFFFF" Opacity="0.8"/>
+                    <SolidColorBrush x:Key="BorderBrush" Color="#333333"/>
+                    <SolidColorBrush x:Key="HoverBrush" Color="#3A3A3A"/>
+                    
+                    <!-- 浅色主题资源，通过动态资源在运行时更改 -->
+                    <SolidColorBrush x:Key="LightBackgroundBrush" Color="#F5F5F5"/>
+                    <SolidColorBrush x:Key="LightForegroundBrush" Color="#212121"/>
+                    <SolidColorBrush x:Key="LightAccentBrush" Color="#7B1FA2"/>
+                    <SolidColorBrush x:Key="LightSecondaryAccentBrush" Color="#00BCD4"/>
+                    <SolidColorBrush x:Key="LightSideNavBackground" Color="#E0E0E0"/>
+                    <SolidColorBrush x:Key="LightTopBarBackground" Color="#EEEEEE"/>
+                    <SolidColorBrush x:Key="LightPlayBarBackground" Color="#DDDDDD"/>
+                    <SolidColorBrush x:Key="LightContentBackground" Color="#FAFAFA"/>
+                    <SolidColorBrush x:Key="LightSubtitleForeground" Color="#212121" Opacity="0.8"/>
+                    <SolidColorBrush x:Key="LightBorderBrush" Color="#BDBDBD"/>
+                    <SolidColorBrush x:Key="LightHoverBrush" Color="#E0E0E0"/>
+
+                    <!-- 值转换器 -->
+                    <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+                    <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+                    <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
+                    <converters:CountToVisibilityConverter x:Key="CountToVisibilityConverter"/>
+                    <converters:BoolToColorConverter x:Key="BoolToColorConverter"/>
+                    <helpers:StringNotEmptyToVisibilityConverter x:Key="StringNotEmptyToVisibilityConverter"/>
+                    <helpers:NumberGreaterThanZeroConverter x:Key="NumberGreaterThanZeroConverter"/>
+                    <helpers:TimeSpanToStringConverter x:Key="TimeSpanToStringConverter"/>
+                    <helpers:SecondsToTimeStringConverter x:Key="SecondsToTimeStringConverter"/>
+                    <helpers:PlaybackStateToIconConverter x:Key="PlaybackStateToIconConverter"/>
+                    <helpers:RatingToStarsConverter x:Key="RatingToStarsConverter"/>
+                    <converters:SongCountConverter x:Key="SongCountConverter"/>
+
+                    <!-- 自定义样式 -->
+                    <Style x:Key="TitleTextStyle" TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="18"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+                        <Setter Property="Margin" Value="0,0,0,10"/>
+                    </Style>
+
+                    <Style x:Key="SubtitleTextStyle" TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="14"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+                        <Setter Property="Opacity" Value="0.8"/>
+                        <Setter Property="Margin" Value="0,0,0,5"/>
+                    </Style>
+
+                    <Style x:Key="BodyTextStyle" TargetType="TextBlock">
+                        <Setter Property="FontSize" Value="12"/>
+                        <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
+                        <Setter Property="TextWrapping" Value="Wrap"/>
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

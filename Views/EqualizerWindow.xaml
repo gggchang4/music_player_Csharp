@@ -1,0 +1,161 @@
+<Window x:Class="MusicPlayerApp.Views.EqualizerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MusicPlayerApp.Views"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="音频均衡器" 
+        Height="500" Width="600" 
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource MaterialDesignPaper}"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 标题 -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,20">
+            <TextBlock Text="音频均衡器" Style="{StaticResource MaterialDesignHeadline5TextBlock}" Margin="0,0,0,10"/>
+            <TextBlock Text="调整音频均衡器设置以获得更好的聆听体验" Style="{StaticResource MaterialDesignBody1TextBlock}" Opacity="0.7"/>
+        </StackPanel>
+
+        <!-- 主内容 -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 均衡器预设 -->
+            <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                <TextBlock Text="均衡器预设" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Margin="0,0,0,10"/>
+                
+                <ComboBox x:Name="EqualizerPresets" Margin="0,0,0,20" Width="200" HorizontalAlignment="Left"
+                          materialDesign:HintAssist.Hint="选择预设">
+                    <ComboBoxItem Content="流行"/>
+                    <ComboBoxItem Content="摇滚"/>
+                    <ComboBoxItem Content="古典"/>
+                    <ComboBoxItem Content="电子"/>
+                    <ComboBoxItem Content="爵士"/>
+                    <ComboBoxItem Content="嘻哈"/>
+                    <ComboBoxItem Content="自定义"/>
+                </ComboBox>
+
+                <!-- 均衡器滑块 -->
+                <TextBlock Text="频率滑块" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Margin="0,0,0,10"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- 均衡器滑块组 -->
+                    <StackPanel Grid.Column="0" Margin="2,0">
+                        <Slider Orientation="Vertical" Height="150" Minimum="-12" Maximum="12" Value="0"
+                                TickFrequency="1" TickPlacement="Both"/>
+                        <TextBlock Text="32Hz" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="1" Margin="2,0">
+                        <Slider Orientation="Vertical" Height="150" Minimum="-12" Maximum="12" Value="0"
+                                TickFrequency="1" TickPlacement="Both"/>
+                        <TextBlock Text="64Hz" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="2" Margin="2,0">
+                        <Slider Orientation="Vertical" Height="150" Minimum="-12" Maximum="12" Value="0"
+                                TickFrequency="1" TickPlacement="Both"/>
+                        <TextBlock Text="125Hz" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="3" Margin="2,0">
+                        <Slider Orientation="Vertical" Height="150" Minimum="-12" Maximum="12" Value="0"
+                                TickFrequency="1" TickPlacement="Both"/>
+                        <TextBlock Text="250Hz" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="4" Margin="2,0">
+                        <Slider Orientation="Vertical" Height="150" Minimum="-12" Maximum="12" Value="0"
+                                TickFrequency="1" TickPlacement="Both"/>
+                        <TextBlock Text="500Hz" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="5" Margin="2,0">
+                        <Slider Orientation="Vertical" Height="150" Minimum="-12" Maximum="12" Value="0"
+                                TickFrequency="1" TickPlacement="Both"/>
+                        <TextBlock Text="1kHz" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="6" Margin="2,0">
+                        <Slider Orientation="Vertical" Height="150" Minimum="-12" Maximum="12" Value="0"
+                                TickFrequency="1" TickPlacement="Both"/>
+                        <TextBlock Text="2kHz" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="7" Margin="2,0">
+                        <Slider Orientation="Vertical" Height="150" Minimum="-12" Maximum="12" Value="0"
+                                TickFrequency="1" TickPlacement="Both"/>
+                        <TextBlock Text="4kHz" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="8" Margin="2,0">
+                        <Slider Orientation="Vertical" Height="150" Minimum="-12" Maximum="12" Value="0"
+                                TickFrequency="1" TickPlacement="Both"/>
+                        <TextBlock Text="8kHz" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="9" Margin="2,0">
+                        <Slider Orientation="Vertical" Height="150" Minimum="-12" Maximum="12" Value="0"
+                                TickFrequency="1" TickPlacement="Both"/>
+                        <TextBlock Text="16kHz" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                    </StackPanel>
+                </Grid>
+                
+                <!-- 其他选项 -->
+                <Grid Margin="0,20,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                        <TextBlock Text="低音增强" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Margin="0,0,0,5"/>
+                        <Slider Minimum="0" Maximum="100" Value="50" 
+                                TickFrequency="10" TickPlacement="Both"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                        <TextBlock Text="空间效果" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" Margin="0,0,0,5"/>
+                        <Slider Minimum="0" Maximum="100" Value="30" 
+                                TickFrequency="10" TickPlacement="Both"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </Grid>
+
+        <!-- 底部按钮 -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Style="{StaticResource MaterialDesignOutlinedButton}" 
+                    Content="重置" Margin="0,0,10,0" 
+                    Command="{Binding ResetEqualizerCommand}"/>
+            <Button Style="{StaticResource MaterialDesignRaisedButton}" 
+                    Content="应用" 
+                    Command="{Binding ApplyEqualizerCommand}"/>
+        </StackPanel>
+    </Grid>
+</Window> 
